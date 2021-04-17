@@ -28,9 +28,10 @@ def main():
   
   while True:
     price = get_latest_btc_price()
-  
-    if price != last_price:
-      pshow_message(device, msg, fill="white", font=proportional(LCD_FONT), scroll_delay=0.1)
-      last_price = price
+    with canvas(device) as draw:
+        text(draw, (0, 0), "${:,.0f}".format(price), fill="white", font=proportional(CP437_FONT)) 
+    #show_message(device, str(price), fill="white", font=proportional(LCD_FONT))
+    last_price = price
+    time.sleep(5)
 
 main()
