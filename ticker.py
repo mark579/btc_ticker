@@ -10,7 +10,7 @@ from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT, TINY_FONT, SINCLAIR_FONT, LCD_FONT
 
-if (os.environ['DEV']):
+if (os.environ.get('DEV', None)):
   from mocks import mock_spi, mock_max7219, mock_canvas, mock_text, mock_show_message
 
   spi = mock_spi
