@@ -30,23 +30,41 @@ def get_latest_btc_price():
   try:  
     response = requests.get(TICKER_API_URL)
     response_json = response.json()
-    return float(response_json['bpi']['USD']['rate_float'])
+    return "${:,.0f}".format(float(response_json['bpi']['USD']['rate_float'])), 1
   except requests.exceptions.ConnectionError:
     return(-1)
+
+def get_joke():
+  try:
+    response = requests.get('https://official-joke-api.appspot.com/random_joke')
+    response_json = response.json()
+    return response_json['setup'] + '.....' + response_json['punchline'], 2
+  except requests.exceptions.ConnectionError:
+    return(-1)
+
 def main():
   
   last_price = -1
-  
+  i = 0
   while True:
-    price = get_latest_btc_price()
+    i = i+1
     message = ""
-    if price == -1:
+    text_type = 0
+
+    if(i == 10):
+      i = 0
+      message, text_type = get_joke()
+    else:
+      message, text_type = get_latest_btc_price()
+    
+    if message == -1:
       message = ":( No internet"
       show_message(device, message, fill="white", font=proportional(LCD_FONT),scroll_delay=0.1)
-    else:
-      message = "${:,.0f}".format(price)
-      with canvas(device) as draw:
-          text(draw, (0, 0), message, fill="white", font=proportional(CP437_FONT)) 
-          time.sleep(5)
-
+    else:  
+      if text_type == 1:
+        with canvas(device) as draw:
+            text(draw, (0, 0), message, fill="white", font=proportional(CP437_FONT)) 
+            time.sleep(5)
+      elif text_type == 2:
+        show_message(device, message, fill="white", font=proportional(LCD_FONT),scroll_delay=0.1)
 main()
