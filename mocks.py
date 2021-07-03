@@ -30,11 +30,11 @@ def mock_canvas(device):
     return MockWith()
 
 def mock_text(draw, tuple, message, fill="white", font="MOCK"):
-    print(message)
+    print(f'text(tuple={tuple}, message={message}, fill={fill}, font={type(font).__name__})')
     return 1
 
 def mock_show_message(device, message, fill, font, scroll_delay):
-    print(message)
+    print(f'show_message(message={message}, fill={fill}, font={type(font).__name__}, scroll_delay={scroll_delay})')
     time.sleep(1/scroll_delay)
 
     return 1
