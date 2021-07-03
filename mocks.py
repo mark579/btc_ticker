@@ -16,8 +16,8 @@ def mock_setup(spi, max7219, canvas, text, show_messsage):
         max7219 = mock_max7219
         canvas = mock_canvas
         text = mock_text
-        show_message = mock_show_message
-    return spi, max7219, canvas, text, show_message
+        show_messsage = mock_show_message
+    return spi, max7219, canvas, text, show_messsage
 
 
 def mock_spi(port=0, device=0, gpio=0):
