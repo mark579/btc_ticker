@@ -1,4 +1,24 @@
 import time
+import os
+
+def mock_setup(spi, max7219, canvas, text, show_messsage):
+    """Mocks out methods for easier testing in console
+
+    Args:
+        spi ([type]): Global SPI Interface
+        max7219 ([type]): Glbal mx7219 Interface
+        canvas ([type]): Global canvas
+        text ([type]): Global text display method
+        show_messsage ([type]): Global show_message method
+    """
+    if (os.environ.get('DEV', None)):
+        spi = mock_spi
+        max7219 = mock_max7219
+        canvas = mock_canvas
+        text = mock_text
+        show_message = mock_show_message
+    return spi, max7219, canvas, text, show_message
+
 
 def mock_spi(port=0, device=0, gpio=0):
     return 1
