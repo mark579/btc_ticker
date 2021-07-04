@@ -11,7 +11,7 @@ def mock_response(id, currency, value):
     return { id: { currency: value} }
 
 
-class TestCrypt(TestCase):
+class TestCrypto(TestCase):
     @responses.activate
     def test_get_latest_price(self):
         id = 'btc'
