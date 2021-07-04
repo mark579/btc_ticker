@@ -3,6 +3,11 @@ Simple Bitcoin Ticker with a sense of Humor.
 
 This uses the Luma Library to display to a MAX7219 display that would be connected to a Raspberry PI
 
+## Config
+Configuration is done in the config.yaml file. 
+
+Currently only one currency and vs_currency is supported at a time
+
 ## Usage
 
 Once your MAX7219 is connected to your raspberry PI with an internet connection, run main. 
@@ -12,9 +17,22 @@ pip install -r requirements.txt
 python3 main.py
 ```
 
-If you want to development while not on a Raspberry Pi setting the DEV environment variable will mock the interfaces for the display and show the text to the console. 
+There are different modes for ways to display the information. 
+
+### Console
+
+Displays display methods calls in the console. 
 
 ```bash
-DEV=1 python3 main.py
+MODE=CONSOLE python3 main.py
 ```
 
+### Pygame
+
+Displays information in a Pygame Emulator. 
+
+This is useful for when you are in an environment other than a raspberry pi and you do not have a SPI/MAX7219 physical device. 
+
+```bash
+MODE=PYGAME python3 main.py
+```

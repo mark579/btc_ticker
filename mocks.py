@@ -11,7 +11,7 @@ def mock_setup(spi, max7219, canvas, text, show_messsage):
         text ([type]): Global text display method
         show_messsage ([type]): Global show_message method
     """
-    if (os.environ.get('DEV', None)):
+    if (os.environ.get('MODE', None) == "CONSOLE"):
         spi = mock_spi
         max7219 = mock_max7219
         canvas = mock_canvas
