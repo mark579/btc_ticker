@@ -21,7 +21,7 @@ There are different modes for ways to display the information.
 
 ### Console
 
-Displays display methods calls in the console. 
+Displays display methods calls in the console. This is useful for headless environments which don't have a way to display the information other than the console. 
 
 ```bash
 MODE=CONSOLE python3 main.py
