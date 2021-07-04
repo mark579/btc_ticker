@@ -22,6 +22,9 @@ class Ticker:
         self.device = max7219(serial, cascaded=8, block_orientation=-90,
                          rotate=0, blocks_arranged_in_reverse_order=False)
 
+    def sanitize(message) -> str:
+        return message.encode("ascii", errors="ignore").decode()
+
     def display_message(self, message, type):
         """Displays a message based on the MessageType
 
@@ -29,6 +32,7 @@ class Ticker:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
+        message = Ticker.sanitize(message)
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",

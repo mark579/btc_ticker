@@ -14,7 +14,6 @@ def get_joke():
         response_json = response.json()
         joke = response_json['setup'] + \
             '.....' + response_json['punchline']
-        joke = joke.encode("ascii", errors="ignore").decode()
         return joke
     except requests.exceptions.ConnectionError:
         raise requests.exceptions.ConnectionError
