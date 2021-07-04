@@ -1,3 +1,4 @@
+from requests.api import get
 import responses
 
 from unittest import TestCase
@@ -19,10 +20,6 @@ class TestJokes(TestCase):
 
         self.assertEqual(get_joke(), 'HI.....BYE')
 
-        responses.add(responses.GET, JOKE_API_URL,
-                      body=Exception(ConnectionError))
-
-        with self.assertRaises(Exception) as context:
-            get_joke()
-        
-        self.assertEqual(ConnectionError, context.exception)
+    @responses.activate
+    def test_get_joke_error(self):
+        self.assertRaises(ConnectionError, get_joke)
