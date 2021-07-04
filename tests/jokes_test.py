@@ -4,6 +4,8 @@ from unittest import TestCase
 from jokes import get_joke
 from jokes import JOKE_API_URL
 
+from requests.exceptions import ConnectionError
+
 
 def mock_json():
     return {'setup': 'HI', 'punchline': 'BYE'}
@@ -16,3 +18,11 @@ class TestJokes(TestCase):
                       json=mock_json(), status=200)
 
         self.assertEqual(get_joke(), 'HI.....BYE')
+
+        responses.add(responses.GET, JOKE_API_URL,
+                      body=Exception(ConnectionError))
+
+        with self.assertRaises(Exception) as context:
+            get_joke()
+        
+        self.assertEqual(ConnectionError, context.exception)
