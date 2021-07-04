@@ -17,6 +17,6 @@ def get_latest_price(id, currency):
         response = requests.get(
             f'{TICKER_API_URL}/?ids={id}&vs_currencies={currency}')
         response_json = response.json()
-        return "${:,.0f}".format(float(response_json[id][currency]))
+        return "${:,}".format(float(response_json[id][currency])).rstrip('0').rstrip('.')
     except requests.exceptions.ConnectionError:
         raise requests.exceptions.ConnectionError
