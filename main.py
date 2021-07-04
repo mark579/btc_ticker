@@ -12,19 +12,22 @@ def main():
     config = load_config(ticker)
     ticker_display_loop(ticker, config['ticker'])
 
+
 def load_config(ticker) -> dict:
     try:
         return Config().get_config()
     except FileNotFoundError:
         ticker.display_message(
-            f'Config File not found', MessageType.STATIC)
+            "Config File not found", MessageType.STATIC)
         time.sleep(25)
         main()
     except Exception as e:
         print(e)
-        ticker.display_message(f'Unhandled error occured. :(', MessageType.STATIC)
+        ticker.display_message(
+            "Unhandled error occured. :(", MessageType.STATIC)
         time.sleep(25)
         main()
+
 
 def ticker_display_loop(ticker, config):
     i = 0
@@ -52,7 +55,7 @@ def ticker_display_loop(ticker, config):
         except Exception as e:
             print(e)
             ticker.display_message(
-                f'Encounter an Unknown Error', MessageType.SCROLLING)
+                "Encounter an Unknown Error", MessageType.SCROLLING)
 
 
 main()

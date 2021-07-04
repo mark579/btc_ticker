@@ -3,6 +3,7 @@ import yaml
 
 CONFIG_FILE = 'config.yaml'
 
+
 class Config:
     def __init__(self) -> None:
         self.config = None

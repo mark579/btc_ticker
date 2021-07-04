@@ -1,4 +1,3 @@
-from requests.api import get
 import responses
 
 from unittest import TestCase
