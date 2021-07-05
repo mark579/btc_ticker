@@ -1,6 +1,6 @@
-# btc_ticker
+# crypto_ticker
 
-Simple Bitcoin Ticker with a sense of Humor.
+Simple Crypto Ticker with a sense of Humor.
 
 This uses the Luma Library to display to a MAX7219 display that would be connected to a Raspberry PI
 
