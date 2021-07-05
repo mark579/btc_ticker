@@ -14,7 +14,7 @@ class TestConfig(TestCase):
         with self.mock_config_file:
             c = config.Config().get_config()
             self.assertEqual(c['ticker']['tell_jokes'], False)
-            self.assertEqual(c['ticker']['crypto'], 'bitcoin')
+            self.assertEqual(c['ticker']['crypto'], ['bitcoin'])
             self.assertEqual(c['ticker']['vs_currency'], 'usd')
 
     def test_missing_config(self):

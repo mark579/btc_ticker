@@ -13,7 +13,7 @@ def mock_text_display(message):
 
 def mock_show_message(message):
     return f'show_message(message={message}, ' \
-        + 'fill=white, font=proportional, scroll_delay=0.03)'
+        + 'fill=white, font=proportional, scroll_delay=0.04)'
 
 
 class TestDisplay(TestCase):
