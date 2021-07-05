@@ -17,45 +17,46 @@ class Ticker():
 
         self.display_loop()
 
+    def display_loop(self):
+        i = 0
+        while True:
+            i = i+1
+            self.display_routine(i)
+            if(i >= 10):
+                i = 0
+
+    def display_routine(self, i):
+        routine = ""
+        config = self.config['ticker']
+        try:
+            if(i >= 10 and config['tell_jokes']):
+                routine = "Joke"
+                message = get_joke()
+                self.viewer.display_message(message, MessageType.SCROLLING)
+            else:
+                routine = "Price"
+                message = get_latest_price(
+                    config['crypto'], config['vs_currency'])
+                self.viewer.display_message(message, MessageType.STATIC)
+                time.sleep(25)
+        except ConnectionError:
+            self.viewer.display_message(
+                f'Error connecting to {routine} API',
+                MessageType.SCROLLING)
+        except Exception as e:
+            print(e)
+            self.viewer.display_message(
+                "Encountered an Unknown Error", MessageType.SCROLLING)
+
     def load_config(self) -> dict:
         try:
             self.config = Config().get_config()
         except FileNotFoundError:
             self.viewer.display_message(
-                "Config File not found", MessageType.STATIC)
+                "Config file not found.", MessageType.STATIC)
             time.sleep(25)
         except Exception as e:
             print(e)
             self.viewer.display_message(
-                "Unhandled error occured. :(", MessageType.STATIC)
+                "Could not load config :(", MessageType.STATIC)
             time.sleep(25)
-
-    def display_loop(self):
-        i = 0
-        message = ""
-        routine = ""
-        config = self.config['ticker']
-        while True:
-            i = i+1
-            try:
-                if(i >= 10 and config['tell_jokes']):
-                    routine = "Joke"
-                    message = get_joke()
-                    self.viewer.display_message(message, MessageType.SCROLLING)
-                else:
-                    routine = "Price"
-                    message = get_latest_price(
-                        config['crypto'], config['vs_currency'])
-                    self.viewer.display_message(message, MessageType.STATIC)
-                    time.sleep(25)
-
-                if(i >= 10):
-                    i = 0
-            except ConnectionError:
-                self.viewer.display_message(
-                    f'Error connecting to {routine} API',
-                    MessageType.SCROLLING)
-            except Exception as e:
-                print(e)
-                self.viewer.display_message(
-                    "Encounter an Unknown Error", MessageType.SCROLLING)
