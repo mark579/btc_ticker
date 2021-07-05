@@ -47,5 +47,5 @@ class TestDisplay(TestCase):
     def test_pygame_mode(self, pygame_mock):
         # Reload module to pickup mocked environment
         importlib.reload(display)
-        t = display.Ticker()
+        display.Ticker()
         pygame_mock.assert_called_with(width=64, height=8)
