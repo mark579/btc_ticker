@@ -37,8 +37,9 @@ class Ticker():
                 routine = "Price"
                 message = get_latest_price(
                     config['crypto'], config['vs_currency'])
-                self.viewer.display_message(message, MessageType.STATIC)
-                time.sleep(25)
+                self.viewer.display_message(
+                    f'{str.upper(config["crypto"])}: {message}',
+                    MessageType.SCROLLING)
         except ConnectionError:
             self.viewer.display_message(
                 f'Error connecting to {routine} API',
