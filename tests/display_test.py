@@ -20,11 +20,11 @@ class TestDisplay(TestCase):
 
     def test_sanitize(self):
         message = "Hello this is a simple message"
-        self.assertEqual(message, display.Ticker.sanitize(message))
+        self.assertEqual(message, display.Viewer.sanitize(message))
 
         message = "This message has invalid characters♠★"
         clean_message = "This message has invalid characters"
-        self.assertEqual(clean_message, display.Ticker.sanitize(message))
+        self.assertEqual(clean_message, display.Viewer.sanitize(message))
 
     @patch.dict(os.environ, {"MODE": "CONSOLE"}, clear=True)
     @patch('builtins.print')
@@ -33,7 +33,7 @@ class TestDisplay(TestCase):
         importlib.reload(display)
         # Don't want to wait on sleep in tests
         time.sleep = MagicMock()
-        t = display.Ticker()
+        t = display.Viewer()
         self.assertEqual(t.device, 1)
 
         t.display_message("BIG MONEY", display.MessageType.STATIC)
@@ -47,5 +47,5 @@ class TestDisplay(TestCase):
     def test_pygame_mode(self, pygame_mock):
         # Reload module to pickup mocked environment
         importlib.reload(display)
-        display.Ticker()
+        display.Viewer()
         pygame_mock.assert_called_with(width=64, height=8)

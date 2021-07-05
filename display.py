@@ -17,7 +17,7 @@ class MessageType(Enum):
     SCROLLING = 2
 
 
-class Ticker:
+class Viewer:
     def __init__(self) -> None:
         if(os.environ.get('MODE', None) == 'PYGAME'):
             self.device = pygame(width=64, height=8)
@@ -37,7 +37,7 @@ class Ticker:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
-        message = Ticker.sanitize(message)
+        message = Viewer.sanitize(message)
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",
