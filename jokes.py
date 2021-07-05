@@ -9,11 +9,8 @@ def get_joke():
     Returns:
         String: The joke
     """
-    try:
-        response = requests.get(JOKE_API_URL)
-        response_json = response.json()
-        joke = response_json['setup'] + \
-            '.....' + response_json['punchline']
-        return joke
-    except requests.exceptions.ConnectionError:
-        raise requests.exceptions.ConnectionError
+    response = requests.get(JOKE_API_URL)
+    response_json = response.json()
+    joke = response_json['setup'] + \
+        '.....' + response_json['punchline']
+    return joke

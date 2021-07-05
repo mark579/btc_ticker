@@ -3,9 +3,7 @@ import os
 from luma.led_matrix.device import max7219
 from luma.emulator.device import pygame
 from luma.core.interface.serial import spi, noop
-from luma.core.interface.serial import noop
 from luma.core.render import canvas
-from luma.core.virtual import viewport
 from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT
 
@@ -19,14 +17,15 @@ class MessageType(Enum):
     SCROLLING = 2
 
 
-class Ticker:
+class Viewer:
     def __init__(self) -> None:
         if(os.environ.get('MODE', None) == 'PYGAME'):
             self.device = pygame(width=64, height=8)
         else:
             serial = spi(port=0, device=0, gpio=noop())
             self.device = max7219(serial, cascaded=8, block_orientation=-90,
-                              rotate=0, blocks_arranged_in_reverse_order=False)
+                                  rotate=0,
+                                  blocks_arranged_in_reverse_order=False)
 
     def sanitize(message) -> str:
         return message.encode("ascii", errors="ignore").decode()
@@ -38,7 +37,7 @@ class Ticker:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
-        message = Ticker.sanitize(message)
+        message = Viewer.sanitize(message)
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",
