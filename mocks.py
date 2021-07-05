@@ -36,7 +36,7 @@ def mock_canvas(device):
 
 def mock_text(draw, tuple, message, fill="white", font="MOCK"):
     print(
-        f'text(tuple={tuple}, message={message},' +
+        f'text(tuple={tuple}, message={message}, ' +
         f'fill={fill}, font={type(font).__name__})')
     return 1
 
