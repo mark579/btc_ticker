@@ -1,7 +1,7 @@
 import os
 import yaml
 
-CONFIG_FILE = 'config.yaml'
+CONFIG_FILE = os.path.dirname(os.path.abspath(__file__)) + '/config.yaml'
 
 
 class Config:
