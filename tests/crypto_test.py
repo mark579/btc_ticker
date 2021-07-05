@@ -22,17 +22,21 @@ class TestCrypto(TestCase):
         c = Crypto()
 
         responses.add(responses.GET,
-                      f'{TICKER_API_URL}/simple/price/?ids={id}&vs_currencies={currency}',
+                      f'{TICKER_API_URL}/simple/price/' +
+                      f'?ids={id}&vs_currencies={currency}',
                       json=mock_response(id, currency, 512345.0), status=200)
 
-        self.assertEqual(c.get_latest_price([id], currency), 'BITCOIN: $512,345 ')
+        self.assertEqual(c.get_latest_price(
+            [id], currency), 'BITCOIN: $512,345 ')
 
         id = 'doge'
         currency = 'usd'
         responses.add(responses.GET,
-                      f'{TICKER_API_URL}/simple/price/?ids={id}&vs_currencies={currency}',
+                      f'{TICKER_API_URL}/simple/price/' +
+                      f'?ids={id}&vs_currencies={currency}',
                       json=mock_response(id, currency, 0.223432), status=200)
-        self.assertEqual(c.get_latest_price([id], currency), 'DOGE: $0.223432 ')
+        self.assertEqual(c.get_latest_price(
+            [id], currency), 'DOGE: $0.223432 ')
 
     @responses.activate
     def test_get_latest_price_error(self):

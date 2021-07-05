@@ -6,7 +6,7 @@ TICKER_API_URL = "https://api.coingecko.com/api/v3"
 class Crypto:
     def __init__(self):
         self.coins = Crypto.coins_request()
-    
+
     def get_coin(self, id):
         for coin in self.coins:
             if coin['id'] == id:
@@ -37,7 +37,8 @@ class Crypto:
 
     def price_request(ids, currency):
         return requests.get(
-            f'{TICKER_API_URL}/simple/price/?ids={",".join(ids)}&vs_currencies={currency}').json()
+            f'{TICKER_API_URL}/simple/price/?ids=' +
+            f'{",".join(ids)}&vs_currencies={currency}').json()
 
     def coins_request():
         return requests.get(
