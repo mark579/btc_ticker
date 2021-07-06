@@ -8,7 +8,11 @@ This uses the Luma Library to display to a MAX7219 display that would be connect
 
 Configuration is done in the config.yaml file.
 
-Currently only one currency and vs_currency is supported at a time
+Select as many cryptos as you'd like in the config.yaml. Only one vs_currency is supported, and it only shows in $'s right now. So really it's just usd. 
+
+The selected IDs need to existin in the [Coingeck API](https://api.coingecko.com/api/v3/coins/list).
+
+Then each one will be added to a list and scroll across the screen. 
 
 ## Usage
 
@@ -34,16 +38,10 @@ Example output:
 ```
 ⟩ MODE=CONSOLE python3 main.py
 {'ticker': {'crypto': 'bitcoin', 'vs_currency': 'usd', 'tell_jokes': True}}
-text(tuple=(0, 0), message=$35,536, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,536, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,536, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,536, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,534, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,534, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,534, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,535, fill=white, font=proportional)
-text(tuple=(0, 0), message=$35,537, fill=white, font=proportional)
-show_message(message=How come the stadium got hot after the game?.....Because all of the fans left., fill=white, font=proportional, scroll_delay=0.03)
+show_message(message=BTC: $34,276 DOGE: $0.234215 , fill=white, font=proportional, scroll_delay=0.04)
+show_meshow_message(message=BTC: $34,276 DOGE: $0.234215 , fill=white, font=proportional, scroll_delay=0.04)
+show_message(message=BTC: $34,276 DOGE: $0.234216 , fill=white, font=proportional, scroll_delay=0.04)
+ssage(message=How come the stadium got hot after the game?.....Because all of the fans left., fill=white, font=proportional, scroll_delay=0.04)
 
 ```
 
