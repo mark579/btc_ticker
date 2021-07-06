@@ -57,4 +57,4 @@ MODE=PYGAME python3 main.py
 Here is a screenshot of window with pygame emulator running
 
 
-![Pygame Emulator](./images/readme/pygame_emulator.png)
+![Pygame Emulator](./images/readme/pygame_emulator.gif)
