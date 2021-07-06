@@ -7,7 +7,8 @@ from requests import ConnectionError
 
 
 class Ticker():
-    def __init__(self) -> None:
+    def __init__(self, config_path) -> None:
+        self.config_path = config_path
         self.viewer = Viewer()
         self.config = None
         self.crypto = Crypto()

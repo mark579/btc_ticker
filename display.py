@@ -1,5 +1,6 @@
 from enum import Enum
 import os
+import time
 from luma.led_matrix.device import max7219
 from luma.emulator.device import pygame
 from luma.core.interface.serial import spi, noop
@@ -31,17 +32,22 @@ class Viewer:
         return message.encode("ascii", errors="ignore").decode()
 
     def display_message(self, message, type):
+        from PIL import ImageFont
+        minecraftia = ImageFont.truetype('./Minecraftia-Regular.ttf', 7)
         """Displays a message based on the MessageType
 
         Args:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
-        message = Viewer.sanitize(message)
+        # message = Viewer.sanitize(message)
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",
                      font=proportional(CP437_FONT))
         elif type == MessageType.SCROLLING:
-            show_message(self.device, message, fill="white",
-                         font=proportional(CP437_FONT), scroll_delay=0.04)
+            with canvas(self.device) as draw:
+                draw.text((0, 0), message, fill='white', font=minecraftia)
+                time.sleep(10)
+            # show_message(self.device, message, fill="white",
+            #              font=proportional(CP437_FONT), scroll_delay=0.04)
