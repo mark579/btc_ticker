@@ -1,4 +1,5 @@
 ticker:
-  crypto: 'bitcoin'
+  crypto: 
+    - 'bitcoin'
   vs_currency: 'usd'
   tell_jokes: false

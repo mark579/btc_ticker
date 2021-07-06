@@ -1,6 +1,6 @@
 import time
 from config import Config
-from crypto import get_latest_price
+from crypto import Crypto
 from display import Viewer, MessageType
 from jokes import get_joke
 from requests import ConnectionError
@@ -10,6 +10,7 @@ class Ticker():
     def __init__(self) -> None:
         self.viewer = Viewer()
         self.config = None
+        self.crypto = Crypto()
 
     def start(self):
         while(self.config is None):
@@ -35,10 +36,9 @@ class Ticker():
                 self.viewer.display_message(message, MessageType.SCROLLING)
             else:
                 routine = "Price"
-                message = get_latest_price(
+                message = self.crypto.get_latest_price(
                     config['crypto'], config['vs_currency'])
-                self.viewer.display_message(message, MessageType.STATIC)
-                time.sleep(25)
+                self.viewer.display_message(message, MessageType.SCROLLING)
         except ConnectionError:
             self.viewer.display_message(
                 f'Error connecting to {routine} API',

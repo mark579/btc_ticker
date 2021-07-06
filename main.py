@@ -2,7 +2,10 @@ from ticker import Ticker
 
 
 def main():
-    Ticker().start()
+    try:
+        Ticker().start()
+    except KeyboardInterrupt:
+        print('Shutting Down.')
 
 
 main()

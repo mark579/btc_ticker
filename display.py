@@ -44,4 +44,4 @@ class Viewer:
                      font=proportional(CP437_FONT))
         elif type == MessageType.SCROLLING:
             show_message(self.device, message, fill="white",
-                         font=proportional(CP437_FONT), scroll_delay=0.03)
+                         font=proportional(CP437_FONT), scroll_delay=0.04)

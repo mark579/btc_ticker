@@ -34,7 +34,7 @@ class TestTicker(TestCase):
             "Config file not found.", MessageType.STATIC)
 
     @mock.patch('ticker.get_joke')
-    @mock.patch('ticker.get_latest_price')
+    @mock.patch('ticker.Crypto.get_latest_price')
     @mock.patch('ticker.Viewer')
     @mock.patch('config.Config.get_config')
     def test_display_routine(self, mock_get_config, mock_viewer,
@@ -50,7 +50,7 @@ class TestTicker(TestCase):
         print(t.config)
         t.display_routine(1)
         t.viewer.display_message.assert_called_with(
-            "$100,000", MessageType.STATIC)
+            "$100,000", MessageType.SCROLLING)
 
         t.display_routine(10)
         t.viewer.display_message.assert_called_with(

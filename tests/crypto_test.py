@@ -1,7 +1,7 @@
 import responses
 
 from unittest import TestCase
-from crypto import get_latest_price
+from crypto import Crypto
 from crypto import TICKER_API_URL
 
 from requests.exceptions import ConnectionError
@@ -16,19 +16,31 @@ class TestCrypto(TestCase):
     def test_get_latest_price(self):
         id = 'btc'
         currency = 'usd'
+        responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',
+                      json=[{'id': 'btc', 'symbol': 'BITCOIN'},
+                            {'id': 'doge', 'symbol': 'DOGE'}], status=200)
+        c = Crypto()
+
         responses.add(responses.GET,
-                      f'{TICKER_API_URL}/?ids={id}&vs_currencies={currency}',
+                      f'{TICKER_API_URL}/simple/price/' +
+                      f'?ids={id}&vs_currencies={currency}',
                       json=mock_response(id, currency, 512345.0), status=200)
 
-        self.assertEqual(get_latest_price(id, currency), '$512,345')
+        self.assertEqual(c.get_latest_price(
+            [id], currency), 'BITCOIN: $512,345 ')
 
         id = 'doge'
         currency = 'usd'
         responses.add(responses.GET,
-                      f'{TICKER_API_URL}/?ids={id}&vs_currencies={currency}',
+                      f'{TICKER_API_URL}/simple/price/' +
+                      f'?ids={id}&vs_currencies={currency}',
                       json=mock_response(id, currency, 0.223432), status=200)
-        self.assertEqual(get_latest_price(id, currency), '$0.223432')
+        self.assertEqual(c.get_latest_price(
+            [id], currency), 'DOGE: $0.223432 ')
 
     @responses.activate
     def test_get_latest_price_error(self):
-        self.assertRaises(ConnectionError, get_latest_price, 'btc', 'usd')
+        responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',
+                      json=[{'btc': {'symbol': 'BITCOIN'}}], status=200)
+        c = Crypto()
+        self.assertRaises(ConnectionError, c.get_latest_price, ['btc'], 'usd')
