@@ -33,7 +33,7 @@ class Viewer:
 
     def display_message(self, message, type):
         from PIL import ImageFont
-        minecraftia = ImageFont.truetype('./Minecraftia-Regular.ttf', 7)
+        minecraftia = ImageFont.truetype('./Minecraftia-Regular.ttf', 8)
         """Displays a message based on the MessageType
 
         Args:
