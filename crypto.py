@@ -28,10 +28,10 @@ class Crypto:
         prices = ''
         response = Crypto.price_request(ids, currency)
         for id in ids:
-            price = "€{:,}".format(float(response[id][currency]))
+            price = "${:,}".format(float(response[id][currency]))
             price = price.rstrip('0').rstrip('.')
             coin = self.get_coin(id)
-            prices += f'{str.upper(coin["symbol"])}: {price} '
+            prices += f'{str.upper(coin["symbol"])}:{price} '
 
         return(prices)
 
