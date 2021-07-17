@@ -30,7 +30,7 @@ class Ticker():
             for crypto in config['crypto']:
                 coin = self.crypto.get_coin(crypto)
                 logo = self.crypto.get_logo(coin)
-                self.viewer.display_message(coin["name"],
+                self.viewer.display_message(str.upper(coin["name"]),
                                             MessageType.FALLING, logo)
                 for j in range(0, 3):
                     message = self.crypto.get_details(
@@ -42,7 +42,7 @@ class Ticker():
             if(config['tell_jokes']):
                 routine = "Joke"
                 message = get_joke()
-                self.viewer.display_message("Joke Time", MessageType.FALLING,
+                self.viewer.display_message("JOKE TIME", MessageType.FALLING,
                                             delay=25)
                 self.viewer.display_message(message, MessageType.SCROLLING)
         except ConnectionError:

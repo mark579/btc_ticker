@@ -10,9 +10,11 @@ Configuration is done in the config.yaml file.
 
 Select as many cryptos as you'd like in the config.yaml. Only one vs_currency is supported, and it only shows in $'s right now. So really it's just usd. 
 
-The selected IDs need to existin in the [Coingeck API](https://api.coingecko.com/api/v3/coins/list).
+There are currently logos that will show for Bitcoin, Dogecoin, and Ethereum. If it's not one of those a logo will not display on the left most 8x8 panel. 
 
-Then each one will be added to a list and scroll across the screen. 
+The selected IDs need to exist in the [Coingeck API](https://api.coingecko.com/api/v3/coins/list).
+
+Then each one will drop in, and display the price and 24H price change. At the end of showing all cryptos. A joke will be displayed if enabled.
 
 ## Usage
 
@@ -38,10 +40,10 @@ Example output:
 ```
 ⟩ MODE=CONSOLE python3 main.py
 {'ticker': {'crypto': 'bitcoin', 'vs_currency': 'usd', 'tell_jokes': True}}
-show_message(message=BTC: $34,276 DOGE: $0.234215 , fill=white, font=proportional, scroll_delay=0.04)
-show_meshow_message(message=BTC: $34,276 DOGE: $0.234215 , fill=white, font=proportional, scroll_delay=0.04)
-show_message(message=BTC: $34,276 DOGE: $0.234216 , fill=white, font=proportional, scroll_delay=0.04)
-ssage(message=How come the stadium got hot after the game?.....Because all of the fans left., fill=white, font=proportional, scroll_delay=0.04)
+display_message(message:Bitcoin, type:MessageType.FALLING, logo:/home/mark/github/btc_ticker/images/logos/bitcoin-8px.bmp, delay:15
+display_message(message:$31,823.0 -0.69%%, type:MessageType.BOUNCING, logo:/home/mark/github/btc_ticker/images/logos/bitcoin-8px.bmp, delay:30
+display_message(message:$31,823.0 -0.69%%, type:MessageType.BOUNCING, logo:/home/mark/github/btc_ticker/images/logos/bitcoin-8px.bmp, delay:30
+display_message(message:$31,823.0 -0.69%%, type:MessageType.BOUNCING, logo:/home/mark/github/btc_ticker/images/logos/bitcoin-8px.bmp, delay:30
 
 ```
 

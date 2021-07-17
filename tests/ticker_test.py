@@ -58,12 +58,12 @@ class TestTicker(TestCase):
         print(t.config)
         t.display_routine()
 
-        calls = [mock.call('Bitcoin', MessageType.FALLING, 'bitcoin_file.jpg')]
+        calls = [mock.call('BITCOIN', MessageType.FALLING, 'bitcoin_file.jpg')]
         for j in range(0, 3):
             calls.append(mock.call('$31,000, +10.20%', MessageType.BOUNCING,
                                    'bitcoin_file.jpg', delay=30))
 
-        calls.append(mock.call('Joke Time', MessageType.FALLING, delay=25))
+        calls.append(mock.call('JOKE TIME', MessageType.FALLING, delay=25))
         calls.append(mock.call('FUNNY!', MessageType.SCROLLING))
 
         t.viewer.display_message.assert_has_calls(calls)
