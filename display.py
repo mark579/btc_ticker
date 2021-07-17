@@ -53,22 +53,19 @@ class Viewer:
                 text(draw, (0, 0), message, fill="white",
                      font=proportional(CP437_FONT))
         elif type == MessageType.SCROLLING:
-            self.scroll_message(message, self.font)
+            Viewer.scroll_message(self.device, message, self.font)
         elif type == MessageType.BOUNCING:
-            Viewer.bounce_message(self.device, message, logo=logo,
-                                  font=self.font, delay=delay)
+            Viewer.bounce_message(self.device, message,
+                                  font=self.font, logo=logo, delay=delay)
 
         elif type == MessageType.FALLING:
             Viewer.drop_message(self.device, message,
                                 font=self.font, logo=logo, delay=delay)
 
     def drop_message(device, msg, font=None, logo=None, delay=0):
-        fps = 10
-        x_offset = 0
-        if logo is not None:
-            x_offset = 8
+        x_offset = 0 if logo is None else 8
 
-        regulator = framerate_regulator(fps)
+        regulator = framerate_regulator(10)
         w = font.getsize(msg)[0]
 
         x = device.width
@@ -78,25 +75,20 @@ class Viewer:
         with canvas(virtual) as draw:
             draw.text((x_offset, 0), msg, fill='white', font=font)
 
-        i = 9
-        j = 0
-        while i >= 0:
+        for i in range(9, -1, -1):
             with regulator:
                 virtual.set_position((0, i))
-                i -= 1
 
-        while j <= delay:
+        for _ in range(0, delay):
             with regulator:
                 virtual.set_position((0, 0))
-                j += 1
 
-    def scroll_message(self, message, font):
-        fps = 25
-        regulator = framerate_regulator(fps)
-        x = self.device.width
+    def scroll_message(device, message, font):
+        regulator = framerate_regulator(25)
+        x = device.width
         w = font.getsize(message)[0]
-        virtual = viewport(self.device, width=w + x +
-                           x, height=self.device.height)
+        virtual = viewport(device, width=w + x +
+                           x, height=device.height)
         with canvas(virtual) as draw:
             draw.text((x, 0), message, fill='white', font=font)
 
@@ -106,39 +98,31 @@ class Viewer:
                 virtual.set_position((i, 0))
                 i += 1
 
-    def bounce_message(device, msg, y_offset=0, logo=None, font=None,
-                       delay=0):
-        fps = 20
-        regulator = framerate_regulator(fps)
+    def bounce_message(device, msg, font=None, logo=None, delay=0):
+        x_offset = 0 if logo is None else 8
         w = font.getsize(msg)[0]
-
-        x_offset = 0
-        if logo is not None:
-            x_offset = 8
-
         x = device.width
+
+        regulator = framerate_regulator(20)
         virtual = viewport(device, width=w + x, height=device.height)
         virtual.logo = logo
 
         with canvas(virtual) as draw:
-            draw.text((x_offset, y_offset), msg, fill='white', font=font)
+            draw.text((x_offset, 0), msg, fill='white', font=font)
 
         i = 0
-        j = 0
-        while j <= delay:
+        for _ in range(0, delay):
             with regulator:
                 virtual.set_position((0, 0))
-                j += 1
 
         while i <= w - x:
             with regulator:
                 virtual.set_position((i, 0))
                 i += 1
 
-        while j >= 0:
+        for _ in range(0, delay):
             with regulator:
                 virtual.set_position((i, 0))
-                j -= 1
 
         while i >= 0:
             with regulator:

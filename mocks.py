@@ -2,8 +2,9 @@ import os
 
 
 class mock7219():
-    def width():
-        return 8
+    width = 64
+    height = 8
+    mode = "1"
 
 
 def mock_setup(spi, max7219, canvas):
@@ -27,7 +28,7 @@ def mock_spi(port=0, device=0, gpio=0):
 
 def mock_max7219(serial=0, cascaded=8, block_orientation=-90,
                  rotate=0, blocks_arranged_in_reverse_order=False):
-    return mock7219
+    return mock7219()
 
 
 def mock_canvas(device):
