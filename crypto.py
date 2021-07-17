@@ -1,7 +1,8 @@
+import os
 import requests
 
 TICKER_API_URL = "https://api.coingecko.com/api/v3"
-
+IMAGE_LOCATION =  os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
 
 class Crypto:
     def __init__(self):
@@ -12,6 +13,15 @@ class Crypto:
             if coin['id'] == id:
                 return coin
         raise Exception('Coin not found in coin list.')
+    
+    def get_logo(self, coin):
+        if(coin['symbol'] == 'btc'):
+            return IMAGE_LOCATION + 'bitcoin-8px.bmp'
+        if(coin['symbol'] == 'eth'):
+            return IMAGE_LOCATION + 'ethereum-8px.bmp'
+        if(coin['symbol'] == 'doge'):
+            return IMAGE_LOCATION + 'dogecoin-8px.bmp'
+        return None
 
     def get_latest_price(self, ids, currency):
         """Gets latest price for a coin vs a currency
@@ -39,6 +49,18 @@ class Crypto:
         return requests.get(
             f'{TICKER_API_URL}/simple/price/?ids=' +
             f'{",".join(ids)}&vs_currencies={currency}').json()
+
+    def markets_request(id, currency):
+        return requests.get(
+            f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
+            f'&ids={id}&order=market_cap_desc&per_page=100&page=1&sparkline=false').json()
+
+    def get_details(self, id, currency):
+        response = Crypto.markets_request(id, currency)
+        price = "${:,}".format(float(response[0]['current_price']))
+        percent_change = "{0:.2f}%".format(
+            float(response[0]['price_change_percentage_24h']))
+        return f'{price} {percent_change}%'
 
     def coins_request():
         return requests.get(

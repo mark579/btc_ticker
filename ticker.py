@@ -37,17 +37,24 @@ class Ticker():
                 self.viewer.display_message(message, MessageType.SCROLLING)
             else:
                 routine = "Price"
-                message = self.crypto.get_latest_price(
-                    config['crypto'], config['vs_currency'])
-                self.viewer.display_message(message, MessageType.BOUNCING)
+                for crypto in config['crypto']:
+                    coin = self.crypto.get_coin(crypto)
+                    logo = self.crypto.get_logo(coin)
+                    self.viewer.display_message(coin["name"],
+                                                MessageType.FALLING, logo)
+                    for j in range(0, 5):
+                        message = self.crypto.get_details(
+                            crypto, config['vs_currency'])
+                        self.viewer.display_message(message,
+                                                    MessageType.BOUNCING, logo)
         except ConnectionError:
             self.viewer.display_message(
                 f'Error connecting to {routine} API',
                 MessageType.SCROLLING)
-        except Exception as e:
-            print(e)
-            self.viewer.display_message(
-                "Encountered an Unknown Error", MessageType.SCROLLING)
+        # except Exception as e:
+        #     print(e)
+        #     self.viewer.display_message(
+        #         "Encountered an Unknown Error", MessageType.SCROLLING)
 
     def load_config(self) -> dict:
         try:
