@@ -4,7 +4,7 @@ from luma.led_matrix.device import max7219
 from luma.emulator.device import pygame
 from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
-from luma.core.legacy import text, show_message
+from luma.core.legacy import text
 from luma.core.legacy.font import proportional, CP437_FONT
 from luma.core.sprite_system import framerate_regulator
 from luma.core.virtual import viewport
@@ -13,8 +13,8 @@ from PIL import ImageFont
 
 
 from mocks import mock_setup
-spi, max7219, canvas, text, show_message = mock_setup(
-    spi, max7219, canvas, text, show_message)
+spi, max7219, canvas = mock_setup(
+    spi, max7219, canvas)
 
 
 class MessageType(Enum):
@@ -43,6 +43,11 @@ class Viewer:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
+        if(os.environ.get('MODE', None) == 'CONSOLE'):
+            print(f'display_message(message:{message}, type:{type}' +
+                  f', logo:{logo}, delay:{delay}')
+            return
+
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",

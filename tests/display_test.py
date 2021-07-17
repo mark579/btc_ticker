@@ -1,49 +1,40 @@
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
+from mocks import mock7219
 import display
 import os
 import importlib
 import time
 
 
-def mock_text_display(message):
-    return f'text(tuple=(0, 0), message={message}, ' \
-        + 'fill=white, font=proportional)'
-
-
-def mock_show_message(message):
-    return f'show_message(message={message}, ' \
-        + 'fill=white, font=proportional, scroll_delay=0.04)'
+def mock_display_message(message, type):
+    return f'display_message(message:{message}, ' + \
+        f'type:{type}, logo:None, delay:15'
 
 
 class TestDisplay(TestCase):
-
-    def test_sanitize(self):
-        message = "Hello this is a simple message"
-        self.assertEqual(message, display.Viewer.sanitize(message))
-
-        message = "This message has invalid characters♠★"
-        clean_message = "This message has invalid characters"
-        self.assertEqual(clean_message, display.Viewer.sanitize(message))
-
-    @patch.dict(os.environ, {"MODE": "CONSOLE"}, clear=True)
-    @patch('builtins.print')
+    @ patch.dict(os.environ, {"MODE": "CONSOLE"}, clear=True)
+    @ patch('builtins.print')
     def test_console_mode(self, mock_print):
         # Reload module to pickup mocked environment
         importlib.reload(display)
         # Don't want to wait on sleep in tests
         time.sleep = MagicMock()
         t = display.Viewer()
-        self.assertEqual(t.device, 1)
+        self.assertEqual(t.device, mock7219)
 
         t.display_message("BIG MONEY", display.MessageType.STATIC)
-        mock_print.assert_called_with(mock_text_display("BIG MONEY"))
+        mock_print.assert_called_with(
+            mock_display_message("BIG MONEY",
+                                 display.MessageType.STATIC))
 
         t.display_message("BIG MONEY", display.MessageType.SCROLLING)
-        mock_print.assert_called_with(mock_show_message("BIG MONEY"))
+        mock_print.assert_called_with(
+            mock_display_message("BIG MONEY",
+                                 display.MessageType.SCROLLING))
 
-    @patch.dict(os.environ, {"MODE": "PYGAME"}, clear=True)
-    @patch('luma.emulator.device.pygame')
+    @ patch.dict(os.environ, {"MODE": "PYGAME"}, clear=True)
+    @ patch('luma.emulator.device.pygame')
     def test_pygame_mode(self, pygame_mock):
         # Reload module to pickup mocked environment
         importlib.reload(display)
