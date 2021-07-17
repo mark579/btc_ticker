@@ -2,7 +2,8 @@ import os
 import requests
 
 TICKER_API_URL = "https://api.coingecko.com/api/v3"
-IMAGE_LOCATION =  os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
+IMAGE_LOCATION = os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
+
 
 class Crypto:
     def __init__(self):
@@ -13,7 +14,7 @@ class Crypto:
             if coin['id'] == id:
                 return coin
         raise Exception('Coin not found in coin list.')
-    
+
     def get_logo(self, coin):
         if(coin['symbol'] == 'btc'):
             return IMAGE_LOCATION + 'bitcoin-8px.bmp'
@@ -53,7 +54,7 @@ class Crypto:
     def markets_request(id, currency):
         return requests.get(
             f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
-            f'&ids={id}&order=market_cap_desc&per_page=100&page=1&sparkline=false').json()
+            f'&ids={id}').json()
 
     def get_details(self, id, currency):
         response = Crypto.markets_request(id, currency)

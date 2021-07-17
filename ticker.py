@@ -20,41 +20,40 @@ class Ticker():
         self.display_loop()
 
     def display_loop(self):
-        i = 0
         while True:
-            i = i+1
-            self.display_routine(i)
-            if(i >= 10):
-                i = 0
+            self.display_routine()
 
-    def display_routine(self, i):
+    def display_routine(self):
         routine = ""
         config = self.config['ticker']
         try:
-            if(i >= 10 and config['tell_jokes']):
+            routine = "Price"
+            for crypto in config['crypto']:
+                coin = self.crypto.get_coin(crypto)
+                logo = self.crypto.get_logo(coin)
+                self.viewer.display_message(coin["name"],
+                                            MessageType.FALLING, logo)
+                for j in range(0, 3):
+                    message = self.crypto.get_details(
+                        crypto, config['vs_currency'])
+                    self.viewer.display_message(message,
+                                                MessageType.BOUNCING, logo,
+                                                delay=30)
+
+            if(config['tell_jokes']):
                 routine = "Joke"
                 message = get_joke()
+                self.viewer.display_message("Joke Time", MessageType.FALLING,
+                                            delay=25)
                 self.viewer.display_message(message, MessageType.SCROLLING)
-            else:
-                routine = "Price"
-                for crypto in config['crypto']:
-                    coin = self.crypto.get_coin(crypto)
-                    logo = self.crypto.get_logo(coin)
-                    self.viewer.display_message(coin["name"],
-                                                MessageType.FALLING, logo)
-                    for j in range(0, 5):
-                        message = self.crypto.get_details(
-                            crypto, config['vs_currency'])
-                        self.viewer.display_message(message,
-                                                    MessageType.BOUNCING, logo)
         except ConnectionError:
             self.viewer.display_message(
                 f'Error connecting to {routine} API',
                 MessageType.SCROLLING)
-        # except Exception as e:
-        #     print(e)
-        #     self.viewer.display_message(
-        #         "Encountered an Unknown Error", MessageType.SCROLLING)
+        except Exception as e:
+            print(e)
+            self.viewer.display_message(
+                "Encountered an Unknown Error", MessageType.SCROLLING)
 
     def load_config(self) -> dict:
         try:

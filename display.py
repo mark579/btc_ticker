@@ -8,16 +8,13 @@ from luma.core.legacy import text, show_message
 from luma.core.legacy.font import proportional, CP437_FONT
 from luma.core.sprite_system import framerate_regulator
 from luma.core.virtual import viewport
-from luma.core.virtual import hotspot
-from luma.core.threadpool import threadpool
-from PIL import Image, ImageDraw, ImageFont
+from viewport_patch import refresh
+from PIL import ImageFont
 
 
 from mocks import mock_setup
 spi, max7219, canvas, text, show_message = mock_setup(
     spi, max7219, canvas, text, show_message)
-
-pool = threadpool(4)
 
 
 class MessageType(Enum):
@@ -29,7 +26,8 @@ class MessageType(Enum):
 
 class Viewer:
     def __init__(self) -> None:
-        viewport.refresh = Viewer.monkey_patch_refresh
+        self.font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
+        viewport.refresh = refresh
         if(os.environ.get('MODE', None) == 'PYGAME'):
             self.device = pygame(width=64, height=8)
         else:
@@ -38,29 +36,26 @@ class Viewer:
                                   rotate=0,
                                   blocks_arranged_in_reverse_order=False)
 
-    def display_message(self, message, type, logo=None):
+    def display_message(self, message, type, logo=None, delay=15):
         """Displays a message based on the MessageType
 
         Args:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
-        font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
         if type == MessageType.STATIC:
             with canvas(self.device) as draw:
                 text(draw, (0, 0), message, fill="white",
                      font=proportional(CP437_FONT))
         elif type == MessageType.SCROLLING:
-            self.scroll_message(message, font)
+            self.scroll_message(message, self.font)
         elif type == MessageType.BOUNCING:
-            # If logo offset
             Viewer.bounce_message(self.device, message, logo=logo,
-                                  fill="white", font=font,
-                                  scroll_delay=0.05, delay=30)
+                                  font=self.font, delay=delay)
 
         elif type == MessageType.FALLING:
-            # If logo offset
-            Viewer.drop_message(self.device, message, font=font, logo=logo, delay=15)
+            Viewer.drop_message(self.device, message,
+                                font=self.font, logo=logo, delay=delay)
 
     def drop_message(device, msg, font=None, logo=None, delay=0):
         fps = 10
@@ -91,7 +86,7 @@ class Viewer:
                 j += 1
 
     def scroll_message(self, message, font):
-        fps = 1.0 / 0.04
+        fps = 25
         regulator = framerate_regulator(fps)
         x = self.device.width
         w = font.getsize(message)[0]
@@ -106,9 +101,9 @@ class Viewer:
                 virtual.set_position((i, 0))
                 i += 1
 
-    def bounce_message(device, msg, y_offset=0, logo=None, fill=None, font=None,
-                       scroll_delay=0.03, delay=0):
-        fps = 0 if scroll_delay == 0 else 1.0 / scroll_delay
+    def bounce_message(device, msg, y_offset=0, logo=None, font=None,
+                       delay=0):
+        fps = 20
         regulator = framerate_regulator(fps)
         w = font.getsize(msg)[0]
 
@@ -144,29 +139,3 @@ class Viewer:
             with regulator:
                 virtual.set_position((i, 0))
                 i -= 1
-
-    def draw_logo(im, logo_file):
-        eraser = Image.new('1', (8, 8))
-        im.paste(eraser, (0, 0))
-        draw = ImageDraw.Draw(im)
-        img = Image.open(logo_file)
-        draw.bitmap((0, 1), img, fill='white')
-
-    def monkey_patch_refresh(self):
-        should_wait = False
-        for hotspot, xy in self._hotspots:
-            if hotspot.should_redraw() and self.is_overlapping_viewport(hotspot, xy):
-                pool.add_task(hotspot.paste_into, self._backing_image, xy)
-                should_wait = True
-
-        if should_wait:
-            pool.wait_completion()
-
-        im = self._backing_image.crop(box=self._crop_box())
-        if self._dither:
-            im = im.convert(self._device.mode)
-
-        if hasattr(self, 'logo') and self.logo:
-            Viewer.draw_logo(im, self.logo)
-        self._device.display(im)
-        del im
