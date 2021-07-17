@@ -27,7 +27,7 @@ class TestCrypto(TestCase):
                       json=mock_response(id, currency, 512345.0), status=200)
 
         self.assertEqual(c.get_latest_price(
-            [id], currency), 'BITCOIN: $512,345 ')
+            [id], currency), 'BITCOIN:$512,345 ')
 
         id = 'doge'
         currency = 'usd'
@@ -36,7 +36,7 @@ class TestCrypto(TestCase):
                       f'?ids={id}&vs_currencies={currency}',
                       json=mock_response(id, currency, 0.223432), status=200)
         self.assertEqual(c.get_latest_price(
-            [id], currency), 'DOGE: $0.223432 ')
+            [id], currency), 'DOGE:$0.223432 ')
 
     @responses.activate
     def test_get_latest_price_error(self):
