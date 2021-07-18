@@ -1,31 +1,22 @@
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch, MagicMock, call
+
+from PIL import ImageFont
+from mocks import mock7219
 import display
 import os
 import importlib
 import time
 
-
-def mock_text_display(message):
-    return f'text(tuple=(0, 0), message={message}, ' \
-        + 'fill=white, font=proportional)'
+test7219 = mock7219()
 
 
-def mock_show_message(message):
-    return f'show_message(message={message}, ' \
-        + 'fill=white, font=proportional, scroll_delay=0.04)'
+def mock_display_message(message, type):
+    return f'display_message(message:{message}, ' + \
+        f'type:{type}, logo:None, delay:15'
 
 
 class TestDisplay(TestCase):
-
-    def test_sanitize(self):
-        message = "Hello this is a simple message"
-        self.assertEqual(message, display.Viewer.sanitize(message))
-
-        message = "This message has invalid characters♠★"
-        clean_message = "This message has invalid characters"
-        self.assertEqual(clean_message, display.Viewer.sanitize(message))
-
     @patch.dict(os.environ, {"MODE": "CONSOLE"}, clear=True)
     @patch('builtins.print')
     def test_console_mode(self, mock_print):
@@ -34,13 +25,17 @@ class TestDisplay(TestCase):
         # Don't want to wait on sleep in tests
         time.sleep = MagicMock()
         t = display.Viewer()
-        self.assertEqual(t.device, 1)
+        self.assertIsInstance(t.device, mock7219)
 
         t.display_message("BIG MONEY", display.MessageType.STATIC)
-        mock_print.assert_called_with(mock_text_display("BIG MONEY"))
+        mock_print.assert_called_with(
+            mock_display_message("BIG MONEY",
+                                 display.MessageType.STATIC))
 
         t.display_message("BIG MONEY", display.MessageType.SCROLLING)
-        mock_print.assert_called_with(mock_show_message("BIG MONEY"))
+        mock_print.assert_called_with(
+            mock_display_message("BIG MONEY",
+                                 display.MessageType.SCROLLING))
 
     @patch.dict(os.environ, {"MODE": "PYGAME"}, clear=True)
     @patch('luma.emulator.device.pygame')
@@ -49,3 +44,130 @@ class TestDisplay(TestCase):
         importlib.reload(display)
         display.Viewer()
         pygame_mock.assert_called_with(width=64, height=8)
+
+    @patch('display.framerate_regulator')
+    @patch('display.viewport')
+    @patch('display.canvas')
+    def test_drop_message(self, mock_canvas, mock_viewport, mock_regulator):
+        canvas = MagicMock()
+        draw = MagicMock()
+        canvas.__enter__ = MagicMock(return_value=draw)
+        virtual = MagicMock()
+        regulator = MagicMock()
+        mock_regulator.return_value = regulator
+        mock_viewport.return_value = virtual
+        mock_canvas.return_value = canvas
+        font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
+        display.Viewer.drop_message(test7219, 'TEST',
+                                    font=font, logo=None, delay=0)
+
+        mock_regulator.assert_called_with(10)
+        mock_canvas.assert_called_with(virtual)
+        draw.text.assert_called_with((0, 0), 'TEST', fill='white', font=font)
+
+        calls = []
+        for i in range(9, -1, -1):
+            calls.append(call((0, i)))
+
+        virtual.set_position.assert_has_calls(calls)
+
+        display.Viewer.drop_message(test7219, 'TEST',
+                                    font=font, logo='logo.bmp', delay=0)
+
+        # Has 8px offset when logos is added
+        draw.text.assert_called_with((8, 0), 'TEST', fill='white', font=font)
+
+    @patch('display.framerate_regulator')
+    @patch('display.viewport')
+    @patch('display.canvas')
+    def test_scroll_message(self, mock_canvas, mock_viewport, mock_regulator):
+        canvas = MagicMock()
+        draw = MagicMock()
+        canvas.__enter__ = MagicMock(return_value=draw)
+        virtual = MagicMock()
+        regulator = MagicMock()
+        mock_regulator.return_value = regulator
+        mock_viewport.return_value = virtual
+        mock_canvas.return_value = canvas
+        font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
+        display.Viewer.scroll_message(test7219, 'TEST',
+                                      font=font)
+
+        mock_regulator.assert_called_with(25)
+        mock_canvas.assert_called_with(virtual)
+        draw.text.assert_called_with(
+            (mock7219.width, 0), 'TEST', fill='white', font=font)
+        w = font.getsize('TEST')[0]
+        calls = []
+        for i in range(0, w + mock7219.width):
+            calls.append(call((i, 0)))
+
+        virtual.set_position.assert_has_calls(calls)
+
+    @patch('display.framerate_regulator')
+    @patch('display.viewport')
+    @patch('display.canvas')
+    def test_bounce_message(self, mock_canvas, mock_viewport, mock_regulator):
+        canvas = MagicMock()
+        draw = MagicMock()
+        canvas.__enter__ = MagicMock(return_value=draw)
+        virtual = MagicMock()
+        regulator = MagicMock()
+        mock_regulator.return_value = regulator
+        mock_viewport.return_value = virtual
+        mock_canvas.return_value = canvas
+        test_txt = 'BOUNCY MESSAGE'
+        font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
+        display.Viewer.bounce_message(test7219, test_txt,
+                                      font=font, logo=None, delay=0)
+
+        mock_regulator.assert_called_with(20)
+        mock_canvas.assert_called_with(virtual)
+        draw.text.assert_called_with((0, 0), test_txt,
+                                     fill='white', font=font)
+
+        w = font.getsize(test_txt)[0]
+        x = mock7219.width
+
+        calls = []
+        i = 0
+        while i <= w - x:
+            calls.append(call((i, 0)))
+            i += 1
+
+        while i >= 0:
+            calls.append(call((i, 0)))
+            i -= 1
+
+        virtual.set_position.assert_has_calls(calls)
+
+        display.Viewer.bounce_message(test7219, test_txt,
+                                      font=font, logo='logo.bmp', delay=0)
+
+        # Has 8px offset when logos is added
+        draw.text.assert_called_with((8, 0), test_txt,
+                                     fill='white', font=font)
+
+    @patch('luma.core.render.canvas')
+    @patch.dict(os.environ, {"MODE": "PYGAME"}, clear=True)
+    @patch('luma.emulator.device.pygame')
+    @patch('luma.core.legacy.text')
+    def test_display_message(self, mock_text, mock_pygame, mock_canvas):
+        # Reload module to pickup mocked environment
+        importlib.reload(display)
+        v = display.Viewer()
+        v.scroll_message = MagicMock()
+        v.bounce_message = MagicMock()
+        v.drop_message = MagicMock()
+
+        mock_pygame.assert_called_with(width=64, height=8)
+
+        v.display_message('HI', display.MessageType.STATIC)
+        mock_text.assert_called()
+
+        v.display_message('HI', display.MessageType.SCROLLING)
+        v.scroll_message.assert_called_with(v.device, 'HI', v.font)
+
+        v.display_message('HI', display.MessageType.BOUNCING)
+        v.bounce_message.assert_called_with(v.device, 'HI',
+                                            font=v.font, logo=None, delay=15)

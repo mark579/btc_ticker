@@ -19,25 +19,31 @@ class Ticker():
         self.display_loop()
 
     def display_loop(self):
-        i = 0
         while True:
-            i = i+1
-            self.display_routine(i)
-            if(i >= 10):
-                i = 0
+            self.display_routine()
 
-    def display_routine(self, i):
+    def display_routine(self):
         routine = ""
         config = self.config['ticker']
         try:
-            if(i >= 10 and config['tell_jokes']):
+            routine = "Price"
+            for crypto in config['crypto']:
+                coin = self.crypto.get_coin(crypto)
+                self.viewer.display_message(str.upper(coin["name"]),
+                                            MessageType.FALLING, coin['logo'])
+                for j in range(0, 3):
+                    message = self.crypto.get_details(
+                        crypto, config['vs_currency'])
+                    self.viewer.display_message(message,
+                                                MessageType.BOUNCING,
+                                                coin['logo'],
+                                                delay=30)
+
+            if(config['tell_jokes']):
                 routine = "Joke"
                 message = get_joke()
-                self.viewer.display_message(message, MessageType.SCROLLING)
-            else:
-                routine = "Price"
-                message = self.crypto.get_latest_price(
-                    config['crypto'], config['vs_currency'])
+                self.viewer.display_message("JOKE TIME", MessageType.FALLING,
+                                            delay=25)
                 self.viewer.display_message(message, MessageType.SCROLLING)
         except ConnectionError:
             self.viewer.display_message(
