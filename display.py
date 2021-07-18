@@ -16,7 +16,9 @@ from mocks import mock_setup
 spi, max7219, canvas = mock_setup(
     spi, max7219, canvas)
 
-FONT_FILE = os.path.dirname(os.path.abspath(__file__)) + '/fonts/pixelmix_bold.ttf'
+FONT_FILE = os.path.dirname(os.path.abspath(
+    __file__)) + '/fonts/pixelmix_bold.ttf'
+
 
 class MessageType(Enum):
     STATIC = 1
