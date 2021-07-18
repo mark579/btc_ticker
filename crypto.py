@@ -12,6 +12,7 @@ class Crypto:
     def get_coin(self, id):
         for coin in self.coins:
             if coin['id'] == id:
+                coin['logo'] = self.get_logo(coin)
                 return coin
         raise Exception('Coin not found in coin list.')
 

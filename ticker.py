@@ -29,14 +29,14 @@ class Ticker():
             routine = "Price"
             for crypto in config['crypto']:
                 coin = self.crypto.get_coin(crypto)
-                logo = self.crypto.get_logo(coin)
                 self.viewer.display_message(str.upper(coin["name"]),
-                                            MessageType.FALLING, logo)
+                                            MessageType.FALLING, coin['logo'])
                 for j in range(0, 3):
                     message = self.crypto.get_details(
                         crypto, config['vs_currency'])
                     self.viewer.display_message(message,
-                                                MessageType.BOUNCING, logo,
+                                                MessageType.BOUNCING,
+                                                coin['logo'],
                                                 delay=30)
 
             if(config['tell_jokes']):
