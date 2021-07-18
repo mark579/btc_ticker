@@ -16,6 +16,7 @@ from mocks import mock_setup
 spi, max7219, canvas = mock_setup(
     spi, max7219, canvas)
 
+FONT_FILE = os.path.dirname(os.path.abspath(__file__)) + '/fonts/pixelmix_bold.ttf'
 
 class MessageType(Enum):
     STATIC = 1
@@ -26,7 +27,7 @@ class MessageType(Enum):
 
 class Viewer:
     def __init__(self) -> None:
-        self.font = ImageFont.truetype('./fonts/pixelmix_bold.ttf', 8)
+        self.font = ImageFont.truetype(FONT_FILE, 8)
         viewport.refresh = refresh
         if(os.environ.get('MODE', None) == 'PYGAME'):
             self.device = pygame(width=64, height=8)
