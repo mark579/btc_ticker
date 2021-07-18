@@ -53,15 +53,16 @@ class Viewer:
                 text(draw, (0, 0), message, fill="white",
                      font=proportional(CP437_FONT))
         elif type == MessageType.SCROLLING:
-            Viewer.scroll_message(self.device, message, self.font)
+            self.scroll_message(self.device, message, self.font)
         elif type == MessageType.BOUNCING:
-            Viewer.bounce_message(self.device, message,
-                                  font=self.font, logo=logo, delay=delay)
-
-        elif type == MessageType.FALLING:
-            Viewer.drop_message(self.device, message,
+            self.bounce_message(self.device, message,
                                 font=self.font, logo=logo, delay=delay)
 
+        elif type == MessageType.FALLING:
+            self.drop_message(self.device, message,
+                              font=self.font, logo=logo, delay=delay)
+
+    @staticmethod
     def drop_message(device, msg, font=None, logo=None, delay=0):
         x_offset = 0 if logo is None else 8
 
@@ -83,6 +84,7 @@ class Viewer:
             with regulator:
                 virtual.set_position((0, 0))
 
+    @staticmethod
     def scroll_message(device, message, font):
         regulator = framerate_regulator(25)
         x = device.width
@@ -98,6 +100,7 @@ class Viewer:
                 virtual.set_position((i, 0))
                 i += 1
 
+    @staticmethod
     def bounce_message(device, msg, font=None, logo=None, delay=0):
         x_offset = 0 if logo is None else 8
         w = font.getsize(msg)[0]

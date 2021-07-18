@@ -147,3 +147,27 @@ class TestDisplay(TestCase):
         # Has 8px offset when logos is added
         draw.text.assert_called_with((8, 0), test_txt,
                                      fill='white', font=font)
+
+    @patch('luma.core.render.canvas')
+    @patch.dict(os.environ, {"MODE": "PYGAME"}, clear=True)
+    @patch('luma.emulator.device.pygame')
+    @patch('luma.core.legacy.text')
+    def test_display_message(self, mock_text, mock_pygame, mock_canvas):
+        # Reload module to pickup mocked environment
+        importlib.reload(display)
+        v = display.Viewer()
+        v.scroll_message = MagicMock()
+        v.bounce_message = MagicMock()
+        v.drop_message = MagicMock()
+
+        mock_pygame.assert_called_with(width=64, height=8)
+
+        v.display_message('HI', display.MessageType.STATIC)
+        mock_text.assert_called()
+
+        v.display_message('HI', display.MessageType.SCROLLING)
+        v.scroll_message.assert_called_with(v.device, 'HI', v.font)
+
+        v.display_message('HI', display.MessageType.BOUNCING)
+        v.bounce_message.assert_called_with(v.device, 'HI',
+                                            font=v.font, logo=None, delay=15)

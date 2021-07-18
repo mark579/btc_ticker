@@ -47,7 +47,11 @@ class TestTicker(TestCase):
             'tell_jokes': True, 'crypto': 'btc', 'vs_currency': 'usd'}}
         mock_joke.return_value = "FUNNY!"
         mock_coin.return_value = {
-            'name': 'Bitcoin', 'id': 'btc', 'symbol': 'btc'}
+            'name': 'Bitcoin',
+            'id': 'btc',
+            'symbol': 'btc',
+            'logo': 'bitcoin_file.jpg'
+        }
         mock_logo.return_value = 'bitcoin_file.jpg'
         mock_details.return_value = '$31,000, +10.20%'
 

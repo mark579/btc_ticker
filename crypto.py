@@ -47,6 +47,13 @@ class Crypto:
 
         return(prices)
 
+    def get_details(self, id, currency):
+        response = Crypto.markets_request(id, currency)
+        price = "${:,}".format(float(response[0]['current_price']))
+        percent_change = "{0:.2f}%".format(
+            float(response[0]['price_change_percentage_24h']))
+        return f'{price} {percent_change}%'
+
     def price_request(ids, currency):
         return requests.get(
             f'{TICKER_API_URL}/simple/price/?ids=' +
@@ -56,13 +63,6 @@ class Crypto:
         return requests.get(
             f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
             f'&ids={id}').json()
-
-    def get_details(self, id, currency):
-        response = Crypto.markets_request(id, currency)
-        price = "${:,}".format(float(response[0]['current_price']))
-        percent_change = "{0:.2f}%".format(
-            float(response[0]['price_change_percentage_24h']))
-        return f'{price} {percent_change}%'
 
     def coins_request():
         return requests.get(
