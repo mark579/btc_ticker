@@ -19,6 +19,8 @@ def has_internet_connection():
 
 
 def setup_wifi():
-    subprocess.run(['wifi-connect'], capture_output=True)
-    wifi = subprocess.run(['wifi-connect', '-r'], capture_output=True)
-    return (str(wifi.stdout))
+    output = subprocess.run(['sudo', 'wifi-connect', '--portal-ssid', 'MAD_Crypto_Ticker'], capture_output=True)
+    print('Tried to run wifi-connect')
+    print(str(output.stdout))
+    wifi = subprocess.run(['iwgetid', '-r'], capture_output=True)
+    return (wifi.stdout.decode('utf-8').rstrip())
