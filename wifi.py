@@ -1,7 +1,5 @@
 import subprocess
 import urllib
-import requests
-
 from crypto import TICKER_API_URL
 
 

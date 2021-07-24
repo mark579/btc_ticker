@@ -23,13 +23,17 @@ class Ticker():
     def setup_connection(self):
         if not has_internet_connection():
             try:
+                self.viewer.display_message(
+                    "CONNECT TO WIFI", MessageType.STATIC)
                 wifi = setup_wifi()
                 if(len(wifi) > 0):
                     self.viewer.display_message(
-                        f'Successfully connected to {wifi}', MessageType.SCROLLING)
+                        f'Successfully connected to {wifi}',
+                        MessageType.SCROLLING)
             except Exception:
                 self.viewer.display_message(
-                    "Error connecting to Wi-Fi. Please try again.", MessageType.SCROLLING)
+                    "Error connecting to Wi-Fi. Please try again.",
+                    MessageType.SCROLLING)
                 self.setup_connection()
 
     def display_loop(self):
