@@ -4,6 +4,7 @@ from crypto import Crypto
 from display import Viewer, MessageType
 from jokes import get_joke
 from requests import ConnectionError
+from wifi import has_internet_connection, setup_wifi
 
 
 class Ticker():
@@ -13,10 +14,23 @@ class Ticker():
         self.crypto = Crypto()
 
     def start(self):
+        self.setup_connection()
         while(self.config is None):
             self.load_config()
 
         self.display_loop()
+
+    def setup_connection(self):
+        if not has_internet_connection():
+            try:
+                wifi = setup_wifi()
+                if(len(wifi) > 0):
+                    self.viewer.display_message(
+                        f'Successfully connected to {wifi}', MessageType.SCROLLING)
+            except Exception:
+                self.viewer.display_message(
+                    "Error connecting to Wi-Fi. Please try again.", MessageType.SCROLLING)
+                self.setup_connection()
 
     def display_loop(self):
         while True:
