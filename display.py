@@ -1,7 +1,7 @@
 from enum import Enum
 import os
 from luma.led_matrix.device import max7219
-from luma.emulator.device import pygame
+# from luma.emulator.device import pygame
 from luma.core.interface.serial import spi, noop
 from luma.core.render import canvas
 from luma.core.legacy import text
@@ -32,7 +32,8 @@ class Viewer:
         self.font = ImageFont.truetype(FONT_FILE, 8)
         viewport.refresh = refresh
         if(os.environ.get('MODE', None) == 'PYGAME'):
-            self.device = pygame(width=64, height=8)
+            # self.device = pygame(width=64, height=8)
+            print("PYGAME NOT SUPPORTED")
         else:
             serial = spi(port=0, device=0, gpio=noop())
             self.device = max7219(serial, cascaded=8, block_orientation=-90,

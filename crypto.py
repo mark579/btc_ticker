@@ -1,5 +1,5 @@
 import os
-import requests
+from requests import get
 
 TICKER_API_URL = "https://api.coingecko.com/api/v3"
 IMAGE_LOCATION = os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
@@ -55,15 +55,15 @@ class Crypto:
         return f'{price} {percent_change}%'
 
     def price_request(ids, currency):
-        return requests.get(
+        return get(
             f'{TICKER_API_URL}/simple/price/?ids=' +
             f'{",".join(ids)}&vs_currencies={currency}').json()
 
     def markets_request(id, currency):
-        return requests.get(
+        return get(
             f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
             f'&ids={id}').json()
 
     def coins_request():
-        return requests.get(
+        return get(
             f'{TICKER_API_URL}/coins/list').json()
