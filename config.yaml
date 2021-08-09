@@ -2,5 +2,6 @@ ticker:
   crypto: 
     - 'bitcoin'
     - 'dogecoin'
+    - 'ethereum'
   vs_currency: 'usd'
   tell_jokes: true

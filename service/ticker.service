@@ -1,0 +1,14 @@
+# Typically installed in lib/systemd/system/ticker.service
+# sudo systemctl daemon-reload
+# sudo systemctl enable ticker.service
+# sudo systemctl start ticker.service
+ [Unit]
+ Description=Crypto Ticker
+ After=multi-user.target
+
+ [Service]
+ Type=idle
+ ExecStart=sudo -u pi /usr/bin/python3 /home/pi/crypto_ticker/main.py
+
+ [Install]
+ WantedBy=multi-user.target
