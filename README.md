@@ -4,6 +4,18 @@ Simple Crypto Ticker with a sense of Humor.
 
 This uses the Luma Library to display to a MAX7219 display that would be connected to a Raspberry PI
 
+## Requirements
+
+This program checks for internet connectivity before starting. To do so it uses the command line tool. 
+
+`nmcli`
+
+It will execute `nmcli -t g` and check the output for full. 
+
+If no connection is found it will attempt to execute `wifi-connect` to start an adhoc connection for users to connect to and setup wifi. This is intended to be used on the raspberry pi. In linux you likely won't want to test this. 
+
+In Mac and Windows you will have to find a way to bypass this check while doing development. 
+
 ## Config
 
 Configuration is done in the config.yaml file.
