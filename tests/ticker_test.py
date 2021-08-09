@@ -1,3 +1,4 @@
+from crypto import Crypto
 from display import MessageType
 from requests import ConnectionError
 import time
@@ -11,6 +12,33 @@ class TestTicker(TestCase):
     def test_init(self, mock_viewer):
         Ticker()
         mock_viewer.assert_called()
+
+    @mock.patch('ticker.Viewer')
+    @mock.patch('ticker.has_internet_connection')
+    @mock.patch('ticker.setup_wifi')
+    def test_setup_connection(self, setup_wifi, mock_has_internet_connection,
+                              mock_viewer):
+        mock_has_internet_connection.return_value = True
+        t = Ticker()
+        t.setup_connection()
+
+        setup_wifi.assert_not_called()
+
+        mock_has_internet_connection.return_value = False
+        setup_wifi.return_value = "DID IT BOYS"
+
+        t.setup_connection()
+        setup_call = mock.call("SETUP", MessageType.STATIC)
+        connect_call = mock.call(
+            "Successfully connected to DID IT BOYS", MessageType.SCROLLING)
+        t.viewer.display_message.assert_has_calls([setup_call, connect_call])
+        setup_wifi.assert_called()
+
+        setup_wifi.side_effect = [Exception(), "DID IT BOYS"]
+        t.setup_connection()
+        error_call = mock.call("Error connecting to Wi-Fi. Please try again.",
+                               MessageType.SCROLLING)
+        t.viewer.display_message.assert_has_calls([setup_call, error_call])
 
     @mock.patch('ticker.Crypto')
     @mock.patch('ticker.Viewer')
@@ -58,6 +86,7 @@ class TestTicker(TestCase):
         # Don't want to wait on sleep in tests
         time.sleep = mock.MagicMock()
         t = Ticker()
+        t.crypto = Crypto()
         t.load_config()
         print(t.config)
         t.display_routine()
