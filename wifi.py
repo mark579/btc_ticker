@@ -11,7 +11,6 @@ def has_internet_connection():
         urllib.request.urlopen(TICKER_API_URL + '/ping')
         return(True)
     except Exception:
-        print('EXCEPTION LOADING API URL')
         return(False)
 
 
