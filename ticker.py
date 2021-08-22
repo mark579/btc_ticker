@@ -38,6 +38,7 @@ class Ticker():
 
     def display_loop(self):
         while True:
+            self.load_config()
             self.display_routine()
 
     def display_routine(self):
@@ -77,10 +78,10 @@ class Ticker():
             self.config = Config().get_config()
         except FileNotFoundError:
             self.viewer.display_message(
-                "Config file not found.", MessageType.STATIC)
+                "Config not found.", MessageType.SCROLLING)
             time.sleep(25)
         except Exception as e:
             print(e)
             self.viewer.display_message(
-                "Could not load config :(", MessageType.STATIC)
-            time.sleep(25)
+                "Could not load config, contact support",
+                MessageType.SCROLLING)

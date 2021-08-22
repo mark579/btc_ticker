@@ -1,0 +1,7 @@
+{
+  "ticker": {
+      "tell_jokes": true,
+      "vs_currency": "usd",
+      "crypto": ["bitcoin", "dogecoin"]
+  }
+}
