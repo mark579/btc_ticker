@@ -2,7 +2,6 @@ import responses
 
 from unittest import TestCase
 from jokes import build_url, get_joke
-from jokes import JOKE_API_URL
 
 from requests.exceptions import ConnectionError
 
