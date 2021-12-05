@@ -1,9 +1,13 @@
 import subprocess
 import urllib
+import os
 from crypto import TICKER_API_URL
 
 
 def has_internet_connection():
+    if os.environ.get('SKIP_INTERNET_CHECK', False) == '1':
+        return True
+
     try:
         output = subprocess.run(['nmcli', '-t', 'g'], capture_output=True)
         if ('full' not in str(output.stdout)):

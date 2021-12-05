@@ -2,6 +2,7 @@ from requests import ConnectionError
 from unittest import TestCase
 from unittest import mock
 import wifi
+import os
 
 
 class TestWifi(TestCase):
@@ -24,6 +25,11 @@ class TestWifi(TestCase):
         urlopen.side_effect = ConnectionError()
         status = wifi.has_internet_connection()
         self.assertEqual(status, False)
+
+    @mock.patch.dict(os.environ, {"SKIP_INTERNET_CHECK": "1"}, clear=True)
+    def test_skip_connection(self):
+        status = wifi.has_internet_connection()
+        self.assertEqual(status, True)
 
     @mock.patch("wifi.subprocess.run")
     def test_setup_wifi(self, run):

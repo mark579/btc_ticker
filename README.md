@@ -6,6 +6,14 @@ This uses the Luma Library to display to a MAX7219 display that would be connect
 
 ## Requirements
 
+To skip the internet check in case you do not have `nmcli` such as on a mac or windows OS. Set `SKIP_INTERNET_CHECK=1` in your environment. 
+
+Example: 
+
+```bash
+MODE=PYGAME SKIP_INTERNET_CHECK=1 python3 main.py
+```
+
 This program checks for internet connectivity before starting. To do so it uses the command line tool. 
 
 `nmcli`
@@ -49,7 +57,7 @@ Displays display methods calls in the console. This is useful for headless envir
 MODE=CONSOLE python3 main.py
 ```
 
-Example output:
+Example output:nm
 
 ```
 ⟩ MODE=CONSOLE python3 main.py
