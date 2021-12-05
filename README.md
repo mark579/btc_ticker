@@ -34,7 +34,7 @@ Select as many cryptos as you'd like in the config.yaml. Only one vs_currency is
 
 There are currently logos that will show for Bitcoin, Dogecoin, and Ethereum. If it's not one of those a logo will not display on the left most 8x8 panel. 
 
-The selected IDs need to exist in the [Coingeck API](https://api.coingecko.com/api/v3/coins/list).
+The selected IDs need to exist in the [Coingecko API](https://api.coingecko.com/api/v3/coins/list).
 
 Then each one will drop in, and display the price and 24H price change. At the end of showing all cryptos. A joke will be displayed if enabled.
 
@@ -57,7 +57,7 @@ Displays display methods calls in the console. This is useful for headless envir
 MODE=CONSOLE python3 main.py
 ```
 
-Example output:nm
+Example output:
 
 ```
 ⟩ MODE=CONSOLE python3 main.py
