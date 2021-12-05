@@ -1,6 +1,6 @@
 import requests
 
-JOKE_API_URL = "https://official-joke-api.appspot.com/random_joke"
+JOKE_API_URL = "https://v2.jokeapi.dev/"
 
 
 def get_joke():
@@ -9,8 +9,16 @@ def get_joke():
     Returns:
         String: The joke
     """
-    response = requests.get(JOKE_API_URL)
+    response = requests.get(build_url())
     response_json = response.json()
-    joke = response_json['setup'] + \
-        '.....' + response_json['punchline']
-    return joke
+    if response_json['type'] == 'twopart':
+        return response_json['setup'] + \
+            '.....' + response_json['delivery']
+    elif response_json['type'] == 'single':
+        return response_json['joke']
+
+
+def build_url():
+
+    return JOKE_API_URL + "joke/Programming,Miscellaneous,Pun,Spooky,Christmas?\
+        blacklistFlags=nsfw,racist,sexist,explicit"
