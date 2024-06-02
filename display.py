@@ -70,7 +70,7 @@ class Viewer:
         x_offset = 0 if logo is None else 8
 
         regulator = framerate_regulator(10)
-        w = font.getsize(msg)[0]
+        w = font.getbbox(msg)[2]
 
         x = device.width
         virtual = viewport(device, width=w + x, height=device.height+9)
@@ -91,7 +91,7 @@ class Viewer:
     def scroll_message(device, message, font):
         regulator = framerate_regulator(25)
         x = device.width
-        w = font.getsize(message)[0]
+        w = font.getbbox(message)[2]
         virtual = viewport(device, width=w + x +
                            x, height=device.height)
         with canvas(virtual) as draw:
@@ -106,7 +106,7 @@ class Viewer:
     @staticmethod
     def bounce_message(device, msg, font=None, logo=None, delay=0):
         x_offset = 0 if logo is None else 8
-        w = font.getsize(msg)[0]
+        w = font.getbbox(msg)[2]
         x = device.width
 
         regulator = framerate_regulator(20)
