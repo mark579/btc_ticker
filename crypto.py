@@ -1,16 +1,5 @@
 import os
-from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
-from requests_cache import CachedSession
-
-retry_strategy = Retry(
-    total=3,
-    backoff_factor=1,
-)
-adapter = HTTPAdapter(max_retries=retry_strategy)
-http = CachedSession("crypto_cache", expire_after=60)
-http.mount("https://", adapter)
-http.mount("http://", adapter)
+from cached_retry_session import CachedRetrySession
 
 TICKER_API_URL = "https://api.coingecko.com/api/v3"
 IMAGE_LOCATION = os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
@@ -18,7 +7,8 @@ IMAGE_LOCATION = os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
 
 class Crypto:
     def __init__(self):
-        self.coins = Crypto.coins_request()
+        self.http = CachedRetrySession("crypto_cache", 60, 3, 1).get_session()
+        self.coins = self.coins_request()
 
     def get_coin(self, id):
         for coin in self.coins:
@@ -49,32 +39,33 @@ class Crypto:
             e.g. BITCOIN: $35,000 DOGECOIN: $0.2500
         """
         prices = ''
-        response = Crypto.price_request(ids, currency)
+        response = self.price_request(ids, currency)
         for id in ids:
             price = "${:,}".format(float(response[id][currency]))
             price = price.rstrip('0').rstrip('.')
             coin = self.get_coin(id)
+            print(coin)
             prices += f'{str.upper(coin["symbol"])}:{price} '
 
         return (prices)
 
     def get_details(self, id, currency):
-        response = Crypto.markets_request(id, currency)
+        response = self.markets_request(id, currency)
         price = "${:,}".format(float(response[0]['current_price']))
         percent_change = "{0:.2f}%".format(
             float(response[0]['price_change_percentage_24h']))
         return f'{price} {percent_change}%'
 
-    def price_request(ids, currency):
-        return http.get(
+    def price_request(self, ids, currency):
+        return self.http.get(
             f'{TICKER_API_URL}/simple/price/?ids=' +
             f'{",".join(ids)}&vs_currencies={currency}').json()
 
-    def markets_request(id, currency):
-        return http.get(
+    def markets_request(self, id, currency):
+        return self.http.get(
             f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
             f'&ids={id}').json()
 
-    def coins_request():
-        return http.get(
+    def coins_request(self):
+        return self.http.get(
             f'{TICKER_API_URL}/coins/list').json()
