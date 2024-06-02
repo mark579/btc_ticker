@@ -1,5 +1,17 @@
 import os
 import requests
+from requests.adapters import HTTPAdapter
+from requests.packages.urllib3.util.retry import Retry
+from requests_cache import CachedSession
+
+retry_strategy = Retry(
+    total=3,
+    backoff_factor=1,
+)
+adapter = HTTPAdapter(max_retries=retry_strategy)
+http = CachedSession("crypto_cache", expire_after=60)
+http.mount("https://", adapter)
+http.mount("http://", adapter)
 
 TICKER_API_URL = "https://api.coingecko.com/api/v3"
 IMAGE_LOCATION = os.path.dirname(os.path.abspath(__file__)) + '/images/logos/'
@@ -55,15 +67,15 @@ class Crypto:
         return f'{price} {percent_change}%'
 
     def price_request(ids, currency):
-        return requests.get(
+        return http.get(
             f'{TICKER_API_URL}/simple/price/?ids=' +
             f'{",".join(ids)}&vs_currencies={currency}').json()
 
     def markets_request(id, currency):
-        return requests.get(
+        return http.get(
             f'{TICKER_API_URL}/coins/markets?vs_currency={currency}' +
             f'&ids={id}').json()
 
     def coins_request():
-        return requests.get(
+        return http.get(
             f'{TICKER_API_URL}/coins/list').json()
