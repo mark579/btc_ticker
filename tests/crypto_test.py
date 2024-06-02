@@ -1,7 +1,8 @@
 import responses
-
+import requests
 import os
 from unittest import TestCase
+from unittest.mock import MagicMock, patch
 from crypto import Crypto
 from crypto import TICKER_API_URL
 
@@ -18,9 +19,18 @@ def mock_details_response(current_price_value,
              'price_change_percentage_24h': price_change_value}]
 
 
+def mock_cacheless_session():
+    mock_session = MagicMock()
+    mock_session.get_session.return_value = requests
+    return mock_session
+
+
 class TestCrypto(TestCase):
     @responses.activate
-    def test_get_latest_price(self):
+    @patch('crypto.CachedRetrySession')
+    def test_get_latest_price(self, mock_http):
+        mock_http.return_value = mock_cacheless_session()
+
         id = 'btc'
         currency = 'usd'
         responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',
@@ -48,14 +58,18 @@ class TestCrypto(TestCase):
             [id], currency), 'DOGE:$0.223432 ')
 
     @responses.activate
-    def test_get_latest_price_error(self):
+    @patch('crypto.CachedRetrySession')
+    def test_get_latest_price_error(self, mock_http):
+        mock_http.return_value = mock_cacheless_session()
         responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',
                       json=[{'btc': {'symbol': 'BITCOIN'}}], status=200)
         c = Crypto()
         self.assertRaises(ConnectionError, c.get_latest_price, ['btc'], 'usd')
 
     @responses.activate
-    def test_get_coin(self):
+    @patch('crypto.CachedRetrySession')
+    def test_get_coin(self, mock_http):
+        mock_http.return_value = mock_cacheless_session()
         mock_coin = {'id': 'btc', 'name': 'bitcoin', 'symbol': 'btc'}
         responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',
                       json=[mock_coin], status=200)
@@ -67,6 +81,7 @@ class TestCrypto(TestCase):
 
         self.assertRaises(Exception, c.get_coin, 'shitcoin')
 
+    @responses.activate
     def test_get_logo(self):
         mock_coin = {'id': 'btc', 'name': 'bitcoin', 'symbol': 'btc'}
         location = os.path.abspath(os.path.join(
@@ -85,7 +100,9 @@ class TestCrypto(TestCase):
         self.assertEqual(logo, None)
 
     @responses.activate
-    def test_get_details(self):
+    @patch('crypto.CachedRetrySession')
+    def test_get_details(self, mock_http):
+        mock_http.return_value = mock_cacheless_session()
         id = 'btc'
         currency = 'usd'
         responses.add(responses.GET, f'{TICKER_API_URL}/coins/list',

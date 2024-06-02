@@ -20,5 +20,6 @@ def get_joke():
 
 def build_url():
 
-    return JOKE_API_URL + "joke/Programming,Miscellaneous,Pun,Spooky,Christmas?\
+    return JOKE_API_URL + \
+        "joke/Programming,Miscellaneous,Pun,Spooky,Christmas?\
         blacklistFlags=nsfw,racist,sexist,explicit"

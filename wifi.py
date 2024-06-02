@@ -11,11 +11,11 @@ def has_internet_connection():
     try:
         output = subprocess.run(['nmcli', '-t', 'g'], capture_output=True)
         if ('full' not in str(output.stdout)):
-            return(False)
+            return (False)
         urllib.request.urlopen(TICKER_API_URL + '/ping')
-        return(True)
+        return (True)
     except Exception:
-        return(False)
+        return (False)
 
 
 def setup_wifi():

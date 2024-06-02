@@ -97,7 +97,7 @@ class TestDisplay(TestCase):
         mock_canvas.assert_called_with(virtual)
         draw.text.assert_called_with(
             (mock7219.width, 0), 'TEST', fill='white', font=font)
-        w = font.getsize('TEST')[0]
+        w = font.getbbox('TEST')[2]
         calls = []
         for i in range(0, w + mock7219.width):
             calls.append(call((i, 0)))
@@ -126,7 +126,7 @@ class TestDisplay(TestCase):
         draw.text.assert_called_with((0, 0), test_txt,
                                      fill='white', font=font)
 
-        w = font.getsize(test_txt)[0]
+        w = font.getbbox(test_txt)[2]
         x = mock7219.width
 
         calls = []
