@@ -18,8 +18,9 @@ def mock_details_response(current_price_value,
     return [{'current_price': current_price_value,
              'price_change_percentage_24h': price_change_value}]
 
+
 def mock_cacheless_session():
-    mock_session = MagicMock()                                        
+    mock_session = MagicMock()
     mock_session.get_session.return_value = requests
     return mock_session
 

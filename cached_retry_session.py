@@ -4,7 +4,8 @@ from requests_cache import CachedSession
 
 
 class CachedRetrySession:
-    def __init__(self, cache_name, expire_after, total_retries, backoff_factor):
+    def __init__(self, cache_name, expire_after,
+                 total_retries, backoff_factor):
         self.retry_strategy = Retry(
             total=total_retries,
             backoff_factor=backoff_factor,
