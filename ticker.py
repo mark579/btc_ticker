@@ -15,7 +15,7 @@ class Ticker():
 
     def start(self):
         self.setup_connection()
-        while(self.config is None):
+        while (self.config is None):
             self.load_config()
         self.crypto = Crypto()
         self.display_loop()
@@ -26,7 +26,7 @@ class Ticker():
                 self.viewer.display_message(
                     "SETUP", MessageType.STATIC)
                 wifi = setup_wifi()
-                if(len(wifi) > 0):
+                if (len(wifi) > 0):
                     self.viewer.display_message(
                         f'Successfully connected to {wifi}',
                         MessageType.SCROLLING)
@@ -57,7 +57,7 @@ class Ticker():
                                                 coin['logo'],
                                                 delay=30)
 
-            if(config['tell_jokes']):
+            if (config['tell_jokes']):
                 routine = "Joke"
                 message = get_joke()
                 self.viewer.display_message("JOKE TIME", MessageType.FALLING,

@@ -31,7 +31,7 @@ class Viewer:
     def __init__(self) -> None:
         self.font = ImageFont.truetype(FONT_FILE, 8)
         viewport.refresh = refresh
-        if(os.environ.get('MODE', None) == 'PYGAME'):
+        if (os.environ.get('MODE', None) == 'PYGAME'):
             self.device = pygame(width=64, height=8)
         else:
             serial = spi(port=0, device=0, gpio=noop())
@@ -46,7 +46,7 @@ class Viewer:
             message (String): The message to display
             type (MessageType): MessageType to display
         """
-        if(os.environ.get('MODE', None) == 'CONSOLE'):
+        if (os.environ.get('MODE', None) == 'CONSOLE'):
             print(f'display_message(message:{message}, type:{type}' +
                   f', logo:{logo}, delay:{delay}')
             return

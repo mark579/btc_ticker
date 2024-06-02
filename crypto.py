@@ -1,5 +1,4 @@
 import os
-import requests
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
 from requests_cache import CachedSession
@@ -29,11 +28,11 @@ class Crypto:
         raise Exception('Coin not found in coin list.')
 
     def get_logo(self, coin):
-        if(coin['symbol'] == 'btc'):
+        if (coin['symbol'] == 'btc'):
             return IMAGE_LOCATION + 'bitcoin-8px.bmp'
-        if(coin['symbol'] == 'eth'):
+        if (coin['symbol'] == 'eth'):
             return IMAGE_LOCATION + 'ethereum-8px.bmp'
-        if(coin['symbol'] == 'doge'):
+        if (coin['symbol'] == 'doge'):
             return IMAGE_LOCATION + 'dogecoin-8px.bmp'
         return None
 
@@ -57,7 +56,7 @@ class Crypto:
             coin = self.get_coin(id)
             prices += f'{str.upper(coin["symbol"])}:{price} '
 
-        return(prices)
+        return (prices)
 
     def get_details(self, id, currency):
         response = Crypto.markets_request(id, currency)

@@ -12,7 +12,7 @@ class Config:
     def load_config(self) -> None:
         with open(CONFIG_FILE, 'r') as file:
             self.config = yaml.safe_load(file)
-            if(os.environ.get('MODE', None)):
+            if (os.environ.get('MODE', None)):
                 print(self.config)
 
     def get_config(self) -> dict:

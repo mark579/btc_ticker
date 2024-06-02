@@ -19,11 +19,12 @@ def refresh(self):
     should_wait = False
     for hotspot, xy in self._hotspots:
         if hotspot.should_redraw() and self.is_overlapping_viewport(hotspot, xy):
-            pool.add_task(hotspot.paste_into, self._backing_image, xy) # type: ignore
+            pool.add_task(hotspot.paste_into,
+                          self._backing_image, xy)  # type: ignore
             should_wait = True
 
     if should_wait:
-        pool.wait_completion() # type: ignore
+        pool.wait_completion()  # type: ignore
 
     im = self._backing_image.crop(box=self._crop_box())
     if self._dither:
