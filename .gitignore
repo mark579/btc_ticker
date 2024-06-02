@@ -127,3 +127,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# SQL Lite Cache
+crypto_cache.sqlite
