@@ -8,7 +8,7 @@
 
  [Service]
  Type=idle
- ExecStart=sudo -u pi /usr/bin/python3 /home/pi/crypto_ticker/main.py
+ ExecStart=sudo -u pi /home/pi/crypto_ticker/.venv/bin/python3 /home/pi/crypto_ticker/main.py
 
  [Install]
  WantedBy=multi-user.target
