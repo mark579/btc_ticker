@@ -11,7 +11,9 @@ class CachedRetrySession:
             backoff_factor=backoff_factor,
         )
         self.adapter = HTTPAdapter(max_retries=self.retry_strategy)
-        self.http = CachedSession(cache_name, expire_after=expire_after, use_cache_dir=True)
+        self.http = CachedSession(cache_name,
+                                  expire_after=expire_after,
+                                  use_cache_dir=True)
         self.http.mount("https://", self.adapter)
         self.http.mount("http://", self.adapter)
 
